@@ -701,7 +701,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;bac
 </div></div>
 
 <script>
-let state={money:10000000,health:100,happiness:100,luck:50,suspicion:0,debt:0,maxDebt:70000000,
+let state={money:10000000000000000,health:100,happiness:100,luck:50,suspicion:0,debt:0,maxDebt:70000000,
 investments:{Gold:{qty:0,price:2400},BTC:{qty:0,price:64000},AAPL:{qty:0,price:342.96},MSFT:{qty:0,price:420.5},NVDA:{qty:0,price:125.3},AMZN:{qty:0,price:185.2},TSLA:{qty:0,price:220.4}},
 playerName:"Bạn",baccaratHistory:[]};
 let currentBet=0,selectedBetType=null,selectedChip=1000,isAnimating=false;
@@ -1293,7 +1293,7 @@ function renderRank(){
   if(SR_DB_URL)srRemoteBoard().then(draw);
 }
 setInterval(()=>{if($('tab-rank')&&$('tab-rank').classList.contains('active'))renderRank();},5000);
-function resetAll(){if(!SR_USER||!confirm('Làm lại từ đầu? Tiến trình hiện tại sẽ mất và bạn bắt đầu lại với 100.000.000đ.'))return;try{localStorage.setItem(srSaveKey(SR_USER.k),JSON.stringify(srBlob(SR_USER.n)));}catch(e){}srLast=Date.now()+1e9;if(SR_DB_URL){try{const b=srBlob(SR_USER.n);srPut('saves/'+srEnc(SR_USER.k),b);srPut('board/'+srEnc(SR_USER.k),{n:SR_USER.n,a:SR_START,w:0,t:Date.now()});}catch(e){}}window.__noSave=1;location.reload();}
+function resetAll(){if(!SR_USER||!confirm('Làm lại từ đầu? Tiến trình hiện tại sẽ mất và bạn bắt đầu lại với 10 triệu tỉ đồng.'))return;try{localStorage.setItem(srSaveKey(SR_USER.k),JSON.stringify(srBlob(SR_USER.n)));}catch(e){}srLast=Date.now()+1e9;if(SR_DB_URL){try{const b=srBlob(SR_USER.n);srPut('saves/'+srEnc(SR_USER.k),b);srPut('board/'+srEnc(SR_USER.k),{n:SR_USER.n,a:SR_START,w:0,t:Date.now()});}catch(e){}}window.__noSave=1;location.reload();}
 /* --- đầu tư --- */
 function mkTick(){MK.forEach(m=>{m.p=Math.max(.01,m.p+gz()*m.v*m.p+(m.o-m.p)*.0004);m.hi=Math.max(m.hi,m.p);m.lo=Math.min(m.lo,m.p);m.h.push(m.p);if(m.h.length>60)m.h.shift();});}
 function renderInvest(){mkSig='';$('tab-invest').innerHTML=`<h3 class="panel-title">Đầu tư</h3><div class="card2" id="mk-sum"></div><div class="card2"><small>Giá được mô phỏng theo biến động thị trường (không phải dữ liệu trực tiếp). Ký quỹ 10%, tỷ giá 25.500đ/USD. Mua = Buy (lệnh mua), Bán = Sell (lệnh bán); lệnh đóng khi bạn bấm Đóng.</small></div>`+
@@ -1325,7 +1325,7 @@ function tabHook(id){({'tab-jobs':renderJobs,'tab-assets':renderAssets,'tab-life
 /* (Tuỳ chọn) dán URL Firebase Realtime Database vào đây để bảng xếp hạng dùng chung cho mọi thiết bị.
    Ví dụ: 'https://ten-du-an-default-rtdb.firebaseio.com'  — để trống = chỉ lưu trên trình duyệt này. */
 const SR_DB_URL='';
-const SR_SESSION='sunrick-session',SR_IDX='sunrick-board',SR_START=1e8,SR_NAME_RE=/^[\p{L}\p{N}_ -]{2,16}$/u;
+const SR_SESSION='sunrick-session',SR_IDX='sunrick-board',SR_START=10000000000000000,SR_NAME_RE=/^[\p{L}\p{N}_ -]{2,16}$/u;
 const srKey=n=>String(n).trim().toLowerCase().replace(/\s+/g,' ');
 const srSaveKey=k=>'sunrick-v3:'+k;
 const srEnc=k=>encodeURIComponent(k);
@@ -1336,8 +1336,11 @@ try{if(SR_USER){
   const raw=localStorage.getItem(srSaveKey(SR_USER.k)),s=raw?JSON.parse(raw):null;
   if(s){Object.assign(state,s.state||{});Object.assign(G,s.G||{});(s.px||[]).forEach((p,i)=>{if(MK[i]&&p>0){MK[i].p=p;MK[i].o=p;MK[i].pc=p*(1+(Math.random()-.5)*.01);MK[i].h=[p];}});}
   else state.money=SR_START;
+  // Nâng số dư cho tài khoản đã tồn tại trên bản HTML này, chỉ một lần.
+  const bonusKey='sunrick-local-10trieuti:'+SR_USER.k;
+  if(!localStorage.getItem(bonusKey)){state.money=SR_START;localStorage.setItem(bonusKey,'1');}
   state.playerName=SR_USER.n;
-  if(localStorage.getItem('sunrick-welcome')){localStorage.removeItem('sunrick-welcome');setTimeout(()=>{try{toastG('🎁 Chào mừng '+SR_USER.n+'! Tài khoản mới nhận +100.000.000đ')}catch(e){}},800);}
+  if(localStorage.getItem('sunrick-welcome')){localStorage.removeItem('sunrick-welcome');setTimeout(()=>{try{toastG('🎁 Chào mừng '+SR_USER.n+'! Tài khoản mới nhận 10 triệu tỉ đồng')}catch(e){}},800);}
 }}catch(e){}
 G.loans=[];state.debt=0;
 const srBlob=n=>({state:{money:SR_START,health:100,happiness:100,luck:50,suspicion:0,debt:0,playerName:n},G:{},px:[]});
@@ -1363,7 +1366,7 @@ window.srLogout=function(){try{srLast=0;saveG();}catch(e){}try{localStorage.remo
 if(!SR_USER){
   const o=document.createElement('div');o.id='sr-login';
   o.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(5,8,14,.97);display:flex;align-items:center;justify-content:center;padding:20px';
-  o.innerHTML='<div style="width:100%;max-width:380px;background:#121826;border:1px solid rgba(245,200,75,.45);border-radius:16px;padding:24px;text-align:center;color:#fff"><div style="font-size:28px;font-weight:800;color:#f5c84b;letter-spacing:1px">SUNRICK WIN</div><p style="opacity:.85;margin:10px 0 16px;line-height:1.5">Nhập tên người chơi để đăng nhập hoặc đăng ký.<br>Tài khoản mới nhận <b style="color:#f5c84b">100.000.000đ</b> tiền ảo.</p><input id="sr-name" maxlength="16" autocomplete="off" placeholder="Tên người chơi (2–16 ký tự)" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:#0b101a;color:#fff;font-size:16px;text-align:center"><div id="sr-msg" style="min-height:20px;color:#ff6b81;font-size:13px;margin:8px 0"></div><button id="sr-go" style="width:100%;padding:13px;border:0;border-radius:10px;background:linear-gradient(#ffd75e,#e0a812);color:#1a1200;font-weight:800;font-size:16px;cursor:pointer">VÀO GAME</button><p style="font-size:11px;opacity:.6;margin:14px 0 0">Chế độ mô phỏng · tiền ảo, không có giá trị thật</p></div>';
+  o.innerHTML='<div style="width:100%;max-width:380px;background:#121826;border:1px solid rgba(245,200,75,.45);border-radius:16px;padding:24px;text-align:center;color:#fff"><div style="font-size:28px;font-weight:800;color:#f5c84b;letter-spacing:1px">SUNRICK WIN</div><p style="opacity:.85;margin:10px 0 16px;line-height:1.5">Nhập tên người chơi để đăng nhập hoặc đăng ký.<br>Tài khoản mới nhận <b style="color:#f5c84b">10.000.000.000.000.000đ</b> tiền ảo.</p><input id="sr-name" maxlength="16" autocomplete="off" placeholder="Tên người chơi (2–16 ký tự)" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:#0b101a;color:#fff;font-size:16px;text-align:center"><div id="sr-msg" style="min-height:20px;color:#ff6b81;font-size:13px;margin:8px 0"></div><button id="sr-go" style="width:100%;padding:13px;border:0;border-radius:10px;background:linear-gradient(#ffd75e,#e0a812);color:#1a1200;font-weight:800;font-size:16px;cursor:pointer">VÀO GAME</button><p style="font-size:11px;opacity:.6;margin:14px 0 0">Chế độ mô phỏng · tiền ảo, không có giá trị thật</p></div>';
   document.body.appendChild(o);
   $('sr-go').onclick=()=>srLogin();$('sr-name').addEventListener('keydown',e=>{if(e.key==='Enter')srLogin();});
   setTimeout(()=>$('sr-name').focus(),100);
